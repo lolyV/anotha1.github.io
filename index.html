@@ -27,27 +27,30 @@
 
     .container {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      padding: 20px;
+      flex-direction: column;
+      height: 100vh;
     }
 
     .button-container {
       display: flex;
+      justify-content: center;
+      margin-top: 20px;
     }
 
     .button-container button {
-      margin-left: 10px;
+      margin: 10px;
       padding: 8px 12px;
       color: #fff;
-      background-color: transparent;
+      background-color: #000;
       border: none;
       cursor: pointer;
       font-size: 16px;
     }
 
     .button-container button:hover {
-      text-decoration: underline;
+      opacity: 0.8;
     }
   </style>
 </head>
